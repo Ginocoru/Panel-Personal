@@ -1,7 +1,7 @@
 {
-  "name": "Mi Panel Personal",
+  "name": "Panel Personal",
   "short_name": "Panel",
-  "start_url": "/mi-panel-personal/",
+  "start_url": "/Panel-Personal/",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
