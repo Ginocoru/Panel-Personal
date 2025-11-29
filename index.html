@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mi Panel Personal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-soft: #111827;
+      --card: #1f2937;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.15);
+      --text: #f9fafb;
+      --text-soft: #9ca3af;
+      --danger: #f97373;
+      --border: #374151;
+      --radius-lg: 18px;
+      --radius-full: 999px;
+      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.5);
+      --transition-fast: 0.2s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1d283a 0, #020617 55%, #020617 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Layout general */
+
+    .app {
+      max-width: 1080px;
+      margin: 24px auto 40px;
+      padding: 0 16px;
+    }
+
+    /* Navbar */
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 999px;
+      padding: 10px 14px;
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 16px;
+      z-index: 20;
+    }
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #38bdf8, #0ea5e9 40%, #0369a1 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      color: white;
+      box-shadow: 0 10px 25px rgba(56, 189, 248, 0.65);
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .navbar-right {
+      display: flex;
+      gap: 4px;
+      background: rgba(15, 23, 42, 0.8);
+      padding: 3px;
+      border-radius: 999px;
+    }
+
+    .nav-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 7px 16px;
+      font-size: 13px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .nav-btn span.icon {
+      font-size: 14px;
+    }
+
+    .nav-btn.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .nav-btn:hover {
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+    }
+
+    /* Hero */
+
+    .hero {
+      margin-top: 22px;
+      margin-bottom: 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .hero-main {
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.19), transparent 60%),
+                  linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.98));
+      border-radius: 24px;
+      padding: 18px 20px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--text-soft);
+      margin-bottom: 10px;
+    }
+
+    .hero-badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #4ade80;
+      box-shadow: 0 0 10px rgba(74, 222, 128, 0.7);
+    }
+
+    .hero-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .hero-sub {
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-bottom: 14px;
+    }
+
+    .hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--text-soft);
+    }
+
+    .hero-floating {
+      position: absolute;
+      right: -16px;
+      bottom: -12px;
+      width: 160px;
+      height: 160px;
+      border-radius: 999px;
+      border: 1px dashed rgba(148, 163, 184, 0.2);
+      background: radial-gradient(circle at 30% 30%, rgba(56, 189, 248, 0.25), transparent 60%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .hero-side {
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 20px;
+      padding: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .hero-side-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .hero-side-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .hero-side-item span.value {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .hero-side-footer {
+      font-size: 11px;
+      color: var(--text-soft);
+      opacity: 0.9;
+    }
+
+    /* Secciones */
+
+    .sections {
+      margin-top: 10px;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 8px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title span.icon {
+      font-size: 18px;
+    }
+
+    .section-desc {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    /* Inputs & botones */
+
+    .control-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .input {
+      flex: 1;
+      min-width: 150px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      padding: 7px 12px;
+      font-size: 13px;
+      outline: none;
+      transition: border var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+    }
+
+    .input::placeholder {
+      color: #6b7280;
+    }
+
+    .input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.3);
+      background: #020617;
+    }
+
+    .btn {
+      border-radius: var(--radius-full);
+      border: none;
+      padding: 7px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast), opacity var(--transition-fast);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+      color: white;
+      box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(56, 189, 248, 0.5);
+    }
+
+    .btn-ghost {
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-soft);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15, 23, 42, 1);
+      color: var(--text);
+    }
+
+    .btn-icon {
+      padding: 6px 10px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-soft);
+      font-size: 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .btn-icon:hover {
+      background: rgba(15, 23, 42, 1);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .btn-sm {
+      padding: 4px 9px;
+      font-size: 11px;
+    }
+
+    .btn-danger {
+      border-color: rgba(248, 113, 113, 0.35);
+      color: #fecaca;
+    }
+
+    .btn-danger:hover {
+      background: rgba(248, 113, 113, 0.06);
+      color: #fecaca;
+    }
+
+    /* Cards listas */
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 10px;
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      padding: 10px 12px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.15), transparent 60%);
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+      pointer-events: none;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .card-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 13px;
+    }
+
+    .price-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .price-meta {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .card-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--text-soft);
+    }
+
+    /* Lista de notas */
+
+    .notes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .note-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.7);
+      position: relative;
+    }
+
+    .note-checkbox {
+      margin-top: 3px;
+      cursor: pointer;
+      width: 14px;
+      height: 14px;
+    }
+
+    .note-content {
+      flex: 1;
+      font-size: 13px;
+      color: var(--text);
+      word-wrap: break-word;
+    }
+
+    .note-content.done {
+      text-decoration: line-through;
+      color: var(--text-soft);
+      opacity: 0.8;
+    }
+
+    .note-meta {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: 2px;
+    }
+
+    .note-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-left: 4px;
+    }
+
+    /* Mensajes vacíos */
+
+    .empty {
+      font-size: 12px;
+      color: var(--text-soft);
+      padding: 10px 0;
+      border-radius: 12px;
+      border: 1px dashed rgba(148, 163, 184, 0.5);
+      text-align: center;
+      background: rgba(15, 23, 42, 0.82);
+    }
+
+    /* Footer */
+
+    .footer {
+      margin-top: auto;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-soft);
+      padding: 14px 0 20px;
+      opacity: 0.75;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Navbar -->
+    <header class="navbar">
+      <div class="navbar-left">
+        <div class="logo-circle">
+          <span>G</span>
+        </div>
+        <div>
+          <div class="brand-title">Mi Panel</div>
+          <div class="brand-sub">Acciones, notas y cosas importantes</div>
+        </div>
+      </div>
+      <nav class="navbar-right">
+        <button class="nav-btn active" data-section="cotizaciones">
+          <span class="icon">💹</span>
+          <span>Cotizaciones</span>
+        </button>
+        <button class="nav-btn" data-section="notas">
+          <span class="icon">📝</span>
+          <span>Notas</span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-main">
+        <div class="hero-badge">
+          <div class="hero-badge-dot"></div>
+          Panel personal activo
+        </div>
+        <h1 class="hero-title">Todo lo que mirás siempre, en un solo lugar.</h1>
+        <p class="hero-sub">
+          Acciones favoritas, recordatorios y notas rápidas. Pensado como un dashboard personal simple,
+          sin login y listo para abrir cuando arrancás el día.
+        </p>
+        <div class="hero-pills">
+          <span class="pill">⚡ Guardado localmente en tu navegador</span>
+          <span class="pill">💹 Seguimiento de tickers favoritos</span>
+          <span class="pill">🧠 Notas y pendientes</span>
+        </div>
+        <div class="hero-floating"></div>
+      </div>
+
+      <aside class="hero-side">
+        <div>
+          <div class="hero-side-title">Resumen rápido (demo)</div>
+          <div class="hero-side-item">
+            <span>Acciones favoritas</span>
+            <span class="value" id="summaryFavs">0</span>
+          </div>
+          <div class="hero-side-item">
+            <span>Notas pendientes</span>
+            <span class="value" id="summaryNotes">0</span>
+          </div>
+        </div>
+        <div class="hero-side-footer">
+          Tip: fijá esta página como pestaña de inicio o favorita en el navegador para abrir tu panel personal
+          cada vez que prendés la compu.
+        </div>
+      </aside>
+    </section>
+
+    <!-- Secciones -->
+    <main class="sections">
+      <!-- Cotizaciones -->
+      <section class="section active" id="section-cotizaciones">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">
+              <span class="icon">💹</span>
+              Cotizaciones favoritas
+            </h2>
+            <p class="section-desc">
+              Agregá los tickers que seguís siempre (por ejemplo: AAPL, TSLA, GGAL, YPFD).
+              Por ahora los precios son simulados; después se puede conectar a una API real.
+            </p>
+          </div>
+          <button id="refreshAllBtn" class="btn-icon">
+            <span>↻</span> Actualizar todo
+          </button>
+        </div>
+
+        <div class="control-bar">
+          <input
+            type="text"
+            id="tickerInput"
+            class="input"
+            placeholder="Agregar ticker (ej: AAPL, TSLA, GGAL, YPFD)"
+          />
+          <button id="addTickerBtn" class="btn btn-primary">
+            <span>＋</span> Agregar a favoritas
+          </button>
+        </div>
+
+        <div id="favoritesContainer" class="grid"></div>
+        <div id="favoritesEmpty" class="empty" style="display:none;">
+          Todavía no agregaste ninguna acción. Probá con <strong>AAPL</strong>, <strong>TSLA</strong>, <strong>GGAL</strong>...
+        </div>
+      </section>
+
+      <!-- Notas -->
+      <section class="section" id="section-notas">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">
+              <span class="icon">📝</span>
+              Notas y recordatorios
+            </h2>
+            <p class="section-desc">
+              Guardá ideas sueltas, pendientes o cosas que no querés olvidar. Todo se guarda
+              en tu navegador y queda ahí aunque cierres la pestaña.
+            </p>
+          </div>
+        </div>
+
+        <div class="control-bar">
+          <input
+            type="text"
+            id="noteInput"
+            class="input"
+            placeholder="Escribí una nota o pendiente (ej: 'Revisar proyecto Maldita Picada')"
+          />
+          <button id="addNoteBtn" class="btn btn-primary">
+            <span>＋</span> Agregar nota
+          </button>
+        </div>
+
+        <div id="notesContainer" class="notes-list"></div>
+        <div id="notesEmpty" class="empty" style="display:none;">
+          Todavía no hay notas. Empezá anotando 2 o 3 cosas que quieras tener visibles hoy.
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Hecho para uso personal. Los datos se guardan localmente en tu navegador (localStorage).
+    </footer>
+  </div>
+
+  <script>
+    // --- Storage keys ---
+    const STORAGE_KEYS = {
+      favorites: "miPanel_favorites",
+      notes: "miPanel_notes",
+    };
+
+    // --- Estado en memoria ---
+    let favorites = []; // [{ ticker, lastPrice, lastUpdate }]
+    let notes = [];     // [{ id, text, done, createdAt }]
+
+    // --- Utilidades de storage ---
+    function loadState() {
+      try {
+        const favRaw = localStorage.getItem(STORAGE_KEYS.favorites);
+        favorites = favRaw ? JSON.parse(favRaw) : [];
+
+        const notesRaw = localStorage.getItem(STORAGE_KEYS.notes);
+        notes = notesRaw ? JSON.parse(notesRaw) : [];
+      } catch (e) {
+        console.error("Error leyendo localStorage", e);
+        favorites = [];
+        notes = [];
+      }
+    }
+
+    function saveFavorites() {
+      localStorage.setItem(STORAGE_KEYS.favorites, JSON.stringify(favorites));
+      updateSummary();
+    }
+
+    function saveNotes() {
+      localStorage.setItem(STORAGE_KEYS.notes, JSON.stringify(notes));
+      updateSummary();
+    }
+
+    // --- Resumen en el hero ---
+    function updateSummary() {
+      const summaryFavs = document.getElementById("summaryFavs");
+      const summaryNotes = document.getElementById("summaryNotes");
+      if (summaryFavs) summaryFavs.textContent = favorites.length;
+      if (summaryNotes) {
+        const pending = notes.filter(n => !n.done).length;
+        summaryNotes.textContent = pending;
+      }
+    }
+
+    // --- Render de Cotizaciones ---
+    function renderFavorites() {
+      const container = document.getElementById("favoritesContainer");
+      const empty = document.getElementById("favoritesEmpty");
+
+      if (!favorites.length) {
+        container.innerHTML = "";
+        empty.style.display = "block";
+        return;
+      }
+
+      empty.style.display = "none";
+      container.innerHTML = "";
+
+      favorites.forEach((fav, index) => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const header = document.createElement("div");
+        header.className = "card-header";
+
+        const title = document.createElement("div");
+        title.className = "card-title";
+        title.textContent = fav.ticker;
+
+        const sub = document.createElement("div");
+        sub.className = "card-sub";
+        sub.textContent = "Acción favorita";
+
+        header.appendChild(title);
+        header.appendChild(sub);
+
+        const priceRow = document.createElement("div");
+        priceRow.className = "price-row";
+
+        const price = document.createElement("div");
+        price.className = "price-value";
+        price.textContent = fav.lastPrice ? ("$ " + fav.lastPrice.toFixed(2)) : "—";
+
+        const meta = document.createElement("div");
+        meta.className = "price-meta";
+        meta.textContent = fav.lastUpdate ? ("Actualizado: " + fav.lastUpdate) : "Sin actualizar";
+
+        priceRow.appendChild(price);
+        priceRow.appendChild(meta);
+
+        const actions = document.createElement("div");
+        actions.className = "card-actions";
+
+        const left = document.createElement("div");
+        left.className = "card-actions-left";
+
+        const badge = document.createElement("span");
+        badge.className = "badge";
+        badge.textContent = "Demo de cotización";
+
+        left.appendChild(badge);
+
+        const right = document.createElement("div");
+        right.style.display = "flex";
+        right.style.gap = "6px";
+
+        const updateBtn = document.createElement("button");
+        updateBtn.className = "btn-icon btn-sm";
+        updateBtn.innerHTML = "<span>↻</span> Actualizar";
+        updateBtn.addEventListener("click", () => {
+          simulateQuoteUpdate(index);
+        });
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "btn-icon btn-sm btn-danger";
+        deleteBtn.innerHTML = "<span>✕</span> Quitar";
+        deleteBtn.addEventListener("click", () => {
+          favorites.splice(index, 1);
+          saveFavorites();
+          renderFavorites();
+        });
+
+        right.appendChild(updateBtn);
+        right.appendChild(deleteBtn);
+
+        actions.appendChild(left);
+        actions.appendChild(right);
+
+        card.appendChild(header);
+        card.appendChild(priceRow);
+        card.appendChild(actions);
+        container.appendChild(card);
+      });
+    }
+
+    // --- Simulación de cotizaciones ---
+    function simulateQuoteUpdate(favIndex) {
+      const fav = favorites[favIndex];
+      if (!fav) return;
+
+      // Simula un precio entre 10 y 1000
+      const newPrice = (Math.random() * 990) + 10;
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" });
+
+      fav.lastPrice = newPrice;
+      fav.lastUpdate = timeStr;
+      saveFavorites();
+      renderFavorites();
+    }
+
+    // --- Render de Notas ---
+    function renderNotes() {
+      const container = document.getElementById("notesContainer");
+      const empty = document.getElementById("notesEmpty");
+
+      if (!notes.length) {
+        container.innerHTML = "";
+        empty.style.display = "block";
+        return;
+      }
+
+      empty.style.display = "none";
+      container.innerHTML = "";
+
+      // Orden simple: primero pendientes, luego hechas, más nuevas arriba
+      const sorted = [...notes].sort((a, b) => {
+        if (a.done !== b.done) {
+          return a.done ? 1 : -1;
+        }
+        return b.createdAt - a.createdAt;
+      });
+
+      sorted.forEach(note => {
+        const item = document.createElement("div");
+        item.className = "note-item";
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.className = "note-checkbox";
+        checkbox.checked = note.done;
+        checkbox.addEventListener("change", () => {
+          toggleNoteDone(note.id);
+        });
+
+        const content = document.createElement("div");
+        content.className = "note-content";
+        if (note.done) {
+          content.classList.add("done");
+        }
+        content.textContent = note.text;
+
+        const meta = document.createElement("div");
+        meta.className = "note-meta";
+        const date = new Date(note.createdAt);
+        meta.textContent = `Creada el ${date.toLocaleDateString("es-AR", {
+          day: "2-digit",
+          month: "2-digit",
+        })}`;
+
+        const textWrapper = document.createElement("div");
+        textWrapper.style.flex = "1";
+        textWrapper.appendChild(content);
+        textWrapper.appendChild(meta);
+
+        const actions = document.createElement("div");
+        actions.className = "note-actions";
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "btn-icon btn-sm btn-danger";
+        deleteBtn.innerHTML = "<span>🗑</span>";
+        deleteBtn.title = "Eliminar nota";
+        deleteBtn.addEventListener("click", () => {
+          deleteNote(note.id);
+        });
+
+        actions.appendChild(deleteBtn);
+
+        item.appendChild(checkbox);
+        item.appendChild(textWrapper);
+        item.appendChild(actions);
+
+        container.appendChild(item);
+      });
+    }
+
+    function toggleNoteDone(id) {
+      const note = notes.find(n => n.id === id);
+      if (!note) return;
+      note.done = !note.done;
+      saveNotes();
+      renderNotes();
+    }
+
+    function deleteNote(id) {
+      notes = notes.filter(n => n.id !== id);
+      saveNotes();
+      renderNotes();
+    }
+
+    // --- Handlers de UI ---
+
+    function setupNavigation() {
+      const buttons = document.querySelectorAll(".nav-btn");
+      buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const section = btn.getAttribute("data-section");
+          if (!section) return;
+
+          buttons.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          document.querySelectorAll(".section").forEach(sec => {
+            sec.classList.remove("active");
+          });
+
+          const target = document.getElementById("section-" + section);
+          if (target) target.classList.add("active");
+        });
+      });
+    }
+
+    function setupFavoritesControls() {
+      const input = document.getElementById("tickerInput");
+      const addBtn = document.getElementById("addTickerBtn");
+      const refreshAllBtn = document.getElementById("refreshAllBtn");
+
+      function addTicker() {
+        let value = input.value.trim();
+        if (!value) return;
+        value = value.toUpperCase();
+
+        if (favorites.some(f => f.ticker === value)) {
+          input.value = "";
+          input.focus();
+          return;
+        }
+
+        favorites.push({
+          ticker: value,
+          lastPrice: null,
+          lastUpdate: null,
+        });
+        saveFavorites();
+        renderFavorites();
+        input.value = "";
+        input.focus();
+      }
+
+      addBtn.addEventListener("click", addTicker);
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") addTicker();
+      });
+
+      refreshAllBtn.addEventListener("click", () => {
+        favorites.forEach((_, index) => simulateQuoteUpdate(index));
+      });
+    }
+
+    function setupNotesControls() {
+      const input = document.getElementById("noteInput");
+      const addBtn = document.getElementById("addNoteBtn");
+
+      function addNote() {
+        const text = input.value.trim();
+        if (!text) return;
+
+        notes.push({
+          id: Date.now() + Math.random(),
+          text,
+          done: false,
+          createdAt: Date.now(),
+        });
+
+        saveNotes();
+        renderNotes();
+        input.value = "";
+        input.focus();
+      }
+
+      addBtn.addEventListener("click", addNote);
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") addNote();
+      });
+    }
+
+    // --- Inicialización ---
+    function init() {
+      loadState();
+      setupNavigation();
+      setupFavoritesControls();
+      setupNotesControls();
+      renderFavorites();
+      renderNotes();
+      updateSummary();
+    }
+
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
