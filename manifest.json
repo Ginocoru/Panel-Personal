@@ -1,20 +1,27 @@
-{
-  "name": "Panel Personal",
-  "short_name": "Panel",
-  "start_url": "/Panel-Personal/",
-  "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#0f172a",
-  "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+async function updateQuoteFromApi(favIndex) {
+  const fav = favorites[favIndex];
+  if (!fav) return;
+
+  try {
+    const apiKey = "GRTO3A3QQN5PS9KE";
+    const symbol = fav.ticker; // ej: AAPL
+    const url = `https://api.XXXX.com/quote?symbol=${symbol}&apikey=${apiKey}`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    // Ejemplo: supongamos que el precio viene en data.price
+    const newPrice = Number(data.price);
+
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" });
+
+    fav.lastPrice = newPrice;
+    fav.lastUpdate = timeStr;
+    saveFavorites();
+    renderFavorites();
+  } catch (e) {
+    console.error("Error consultando API", e);
+    alert("No se pudo actualizar la cotización. Probá de nuevo más tarde.");
+  }
 }

@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mi Panel Personal</title>
 
+  <!-- PWA / App -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
-  
+
   <style>
     :root {
       --bg: #0f172a;
@@ -39,8 +40,6 @@
       display: flex;
       flex-direction: column;
     }
-
-    /* Layout general */
 
     .app {
       max-width: 1080px;
@@ -296,8 +295,6 @@
       color: var(--text-soft);
     }
 
-    /* Inputs & botones */
-
     .control-bar {
       display: flex;
       flex-wrap: wrap;
@@ -541,6 +538,76 @@
       margin-left: 4px;
     }
 
+    /* Finanzas */
+
+    .fin-row {
+      display: grid;
+      grid-template-columns: 110px 90px 100px minmax(0, 1fr) minmax(0, 1.2fr) auto;
+      gap: 8px;
+      align-items: center;
+      font-size: 12px;
+      padding: 6px 8px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 768px) {
+      .fin-row {
+        grid-template-columns: 1fr;
+        align-items: flex-start;
+      }
+    }
+
+    .fin-badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .fin-badge.ingreso {
+      color: #bbf7d0;
+      border-color: rgba(34, 197, 94, 0.6);
+    }
+
+    .fin-badge.gasto {
+      color: #fecaca;
+      border-color: rgba(248, 113, 113, 0.7);
+    }
+
+    .fin-monto {
+      font-weight: 600;
+    }
+
+    .fin-monto.ingreso {
+      color: #4ade80;
+    }
+
+    .fin-monto.gasto {
+      color: #f97373;
+    }
+
+    .fin-totales {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .fin-totales span {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
     /* Mensajes vacíos */
 
     .empty {
@@ -575,7 +642,7 @@
         </div>
         <div>
           <div class="brand-title">Mi Panel</div>
-          <div class="brand-sub">Acciones, notas y cosas importantes</div>
+          <div class="brand-sub">Acciones, notas y finanzas personales</div>
         </div>
       </div>
       <nav class="navbar-right">
@@ -586,6 +653,10 @@
         <button class="nav-btn" data-section="notas">
           <span class="icon">📝</span>
           <span>Notas</span>
+        </button>
+        <button class="nav-btn" data-section="finanzas">
+          <span class="icon">💰</span>
+          <span>Finanzas</span>
         </button>
       </nav>
     </header>
@@ -599,20 +670,20 @@
         </div>
         <h1 class="hero-title">Todo lo que mirás siempre, en un solo lugar.</h1>
         <p class="hero-sub">
-          Acciones favoritas, recordatorios y notas rápidas. Pensado como un dashboard personal simple,
+          Acciones favoritas, recordatorios, y tus movimientos financieros. Un dashboard personal simple,
           sin login y listo para abrir cuando arrancás el día.
         </p>
         <div class="hero-pills">
           <span class="pill">⚡ Guardado localmente en tu navegador</span>
-          <span class="pill">💹 Seguimiento de tickers favoritos</span>
-          <span class="pill">🧠 Notas y pendientes</span>
+          <span class="pill">💹 Cotizaciones reales desde Alpha Vantage</span>
+          <span class="pill">💰 Exportable a Excel (CSV)</span>
         </div>
         <div class="hero-floating"></div>
       </div>
 
       <aside class="hero-side">
         <div>
-          <div class="hero-side-title">Resumen rápido (demo)</div>
+          <div class="hero-side-title">Resumen rápido</div>
           <div class="hero-side-item">
             <span>Acciones favoritas</span>
             <span class="value" id="summaryFavs">0</span>
@@ -621,10 +692,14 @@
             <span>Notas pendientes</span>
             <span class="value" id="summaryNotes">0</span>
           </div>
+          <div class="hero-side-item">
+            <span>Saldo finanzas</span>
+            <span class="value" id="summarySaldo">$ 0</span>
+          </div>
         </div>
         <div class="hero-side-footer">
-          Tip: fijá esta página como pestaña de inicio o favorita en el navegador para abrir tu panel personal
-          cada vez que prendés la compu.
+          Tip: fijá esta página como pestaña de inicio o instalala como app en el celu
+          para abrir tu panel personal cada vez que prendés la compu.
         </div>
       </aside>
     </section>
@@ -641,7 +716,7 @@
             </h2>
             <p class="section-desc">
               Agregá los tickers que seguís siempre (por ejemplo: AAPL, TSLA, GGAL, YPFD).
-              Por ahora los precios son simulados; después se puede conectar a una API real.
+              Los precios se consultan en Alpha Vantage (tené en cuenta el límite de la API gratis).
             </p>
           </div>
           <button id="refreshAllBtn" class="btn-icon">
@@ -699,25 +774,87 @@
           Todavía no hay notas. Empezá anotando 2 o 3 cosas que quieras tener visibles hoy.
         </div>
       </section>
+
+      <!-- Finanzas -->
+      <section class="section" id="section-finanzas">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">
+              <span class="icon">💰</span>
+              Finanzas personales (simple)
+            </h2>
+            <p class="section-desc">
+              Registrá ingresos y gastos rápidos del día a día. Podés exportar todo a CSV para
+              copiarlo o importarlo en tu Excel.
+            </p>
+          </div>
+          <button id="exportCsvBtn" class="btn-icon">
+            <span>⬇</span> Exportar CSV
+          </button>
+        </div>
+
+        <div class="control-bar">
+          <input type="date" id="finFecha" class="input" />
+          <select id="finTipo" class="input" style="max-width:140px;">
+            <option value="ingreso">Ingreso</option>
+            <option value="gasto">Gasto</option>
+          </select>
+          <input
+            type="number"
+            id="finMonto"
+            class="input"
+            placeholder="Monto"
+            step="0.01"
+          />
+          <input
+            type="text"
+            id="finCategoria"
+            class="input"
+            placeholder="Categoría (ej: Sueldo, Comida, Inversión...)"
+          />
+          <input
+            type="text"
+            id="finDescripcion"
+            class="input"
+            placeholder="Detalle (opcional)"
+          />
+          <button id="finAddBtn" class="btn btn-primary">
+            <span>＋</span> Agregar
+          </button>
+        </div>
+
+        <div id="finanzasContainer"></div>
+        <div id="finanzasEmpty" class="empty" style="display:none;">
+          Todavía no cargaste movimientos. Empezá anotando los de hoy y después exportás a tu Excel.
+        </div>
+        <div class="fin-totales" id="finanzasTotales" style="display:none;"></div>
+      </section>
     </main>
 
     <footer class="footer">
       Hecho para uso personal. Los datos se guardan localmente en tu navegador (localStorage).
+      Las cotizaciones se consultan en Alpha Vantage usando tu API key.
     </footer>
   </div>
 
   <script>
-    // --- Storage keys ---
+    // === CONFIGURACIÓN ===
+    const ALPHA_VANTAGE_API_KEY = "GRTO3A3QQN5PS9KE"; // tu key
+    const ALPHA_VANTAGE_URL = "https://www.alphavantage.co/query";
+
+    // === CLAVES DE STORAGE ===
     const STORAGE_KEYS = {
       favorites: "miPanel_favorites",
       notes: "miPanel_notes",
+      finanzas: "miPanel_finanzas",
     };
 
-    // --- Estado en memoria ---
+    // === ESTADO ===
     let favorites = []; // [{ ticker, lastPrice, lastUpdate }]
     let notes = [];     // [{ id, text, done, createdAt }]
+    let movimientos = []; // [{ id, fecha, tipo, monto, categoria, descripcion }]
 
-    // --- Utilidades de storage ---
+    // === STORAGE UTILS ===
     function loadState() {
       try {
         const favRaw = localStorage.getItem(STORAGE_KEYS.favorites);
@@ -725,10 +862,14 @@
 
         const notesRaw = localStorage.getItem(STORAGE_KEYS.notes);
         notes = notesRaw ? JSON.parse(notesRaw) : [];
+
+        const finRaw = localStorage.getItem(STORAGE_KEYS.finanzas);
+        movimientos = finRaw ? JSON.parse(finRaw) : [];
       } catch (e) {
         console.error("Error leyendo localStorage", e);
         favorites = [];
         notes = [];
+        movimientos = [];
       }
     }
 
@@ -742,18 +883,35 @@
       updateSummary();
     }
 
-    // --- Resumen en el hero ---
+    function saveFinanzas() {
+      localStorage.setItem(STORAGE_KEYS.finanzas, JSON.stringify(movimientos));
+      updateSummary();
+    }
+
+    // === RESUMEN HERO ===
     function updateSummary() {
       const summaryFavs = document.getElementById("summaryFavs");
       const summaryNotes = document.getElementById("summaryNotes");
+      const summarySaldo = document.getElementById("summarySaldo");
+
       if (summaryFavs) summaryFavs.textContent = favorites.length;
       if (summaryNotes) {
         const pending = notes.filter(n => !n.done).length;
         summaryNotes.textContent = pending;
       }
+      if (summarySaldo) {
+        const ingreso = movimientos
+          .filter(m => m.tipo === "ingreso")
+          .reduce((acc, m) => acc + m.monto, 0);
+        const gasto = movimientos
+          .filter(m => m.tipo === "gasto")
+          .reduce((acc, m) => acc + m.monto, 0);
+        const saldo = ingreso - gasto;
+        summarySaldo.textContent = "$ " + saldo.toFixed(2);
+      }
     }
 
-    // --- Render de Cotizaciones ---
+    // === COTIZACIONES: RENDER ===
     function renderFavorites() {
       const container = document.getElementById("favoritesContainer");
       const empty = document.getElementById("favoritesEmpty");
@@ -790,7 +948,7 @@
 
         const price = document.createElement("div");
         price.className = "price-value";
-        price.textContent = fav.lastPrice ? ("$ " + fav.lastPrice.toFixed(2)) : "—";
+        price.textContent = (fav.lastPrice != null) ? ("$ " + fav.lastPrice.toFixed(2)) : "—";
 
         const meta = document.createElement("div");
         meta.className = "price-meta";
@@ -803,12 +961,9 @@
         actions.className = "card-actions";
 
         const left = document.createElement("div");
-        left.className = "card-actions-left";
-
         const badge = document.createElement("span");
         badge.className = "badge";
-        badge.textContent = "Demo de cotización";
-
+        badge.textContent = "Alpha Vantage · GLOBAL_QUOTE";
         left.appendChild(badge);
 
         const right = document.createElement("div");
@@ -819,7 +974,7 @@
         updateBtn.className = "btn-icon btn-sm";
         updateBtn.innerHTML = "<span>↻</span> Actualizar";
         updateBtn.addEventListener("click", () => {
-          simulateQuoteUpdate(index);
+          updateQuoteFromApi(index);
         });
 
         const deleteBtn = document.createElement("button");
@@ -844,23 +999,56 @@
       });
     }
 
-    // --- Simulación de cotizaciones ---
-    function simulateQuoteUpdate(favIndex) {
+    // === COTIZACIONES: CONSULTA A ALPHA VANTAGE ===
+    async function updateQuoteFromApi(favIndex) {
       const fav = favorites[favIndex];
       if (!fav) return;
 
-      // Simula un precio entre 10 y 1000
-      const newPrice = (Math.random() * 990) + 10;
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" });
+      const symbol = fav.ticker.trim().toUpperCase();
+      if (!symbol) return;
 
-      fav.lastPrice = newPrice;
-      fav.lastUpdate = timeStr;
-      saveFavorites();
-      renderFavorites();
+      try {
+        const url = `${ALPHA_VANTAGE_URL}?function=GLOBAL_QUOTE&symbol=${encodeURIComponent(symbol)}&apikey=${ALPHA_VANTAGE_API_KEY}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.Note) {
+          console.warn("Límite de API alcanzado o throttle:", data.Note);
+          alert("La API de Alpha Vantage está limitando las consultas (límite diario o por minuto). Probá más tarde.");
+          return;
+        }
+        if (data["Error Message"]) {
+          console.error("Error de API:", data["Error Message"]);
+          alert("La API devolvió un error para el ticker " + symbol + ". Revisá si el símbolo es correcto.");
+          return;
+        }
+
+        const quote = data["Global Quote"] || data["GlobalQuote"];
+        const priceStr = quote ? (quote["05. price"] || quote["05. Price"]) : null;
+        const price = priceStr ? Number(priceStr) : NaN;
+
+        if (isNaN(price)) {
+          alert("No se pudo obtener un precio válido para " + symbol);
+          return;
+        }
+
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString("es-AR", {
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+
+        fav.lastPrice = price;
+        fav.lastUpdate = timeStr;
+        saveFavorites();
+        renderFavorites();
+      } catch (e) {
+        console.error("Error consultando Alpha Vantage", e);
+        alert("No se pudo actualizar la cotización (problema de red o API).");
+      }
     }
 
-    // --- Render de Notas ---
+    // === NOTAS: RENDER ===
     function renderNotes() {
       const container = document.getElementById("notesContainer");
       const empty = document.getElementById("notesEmpty");
@@ -874,11 +1062,8 @@
       empty.style.display = "none";
       container.innerHTML = "";
 
-      // Orden simple: primero pendientes, luego hechas, más nuevas arriba
       const sorted = [...notes].sort((a, b) => {
-        if (a.done !== b.done) {
-          return a.done ? 1 : -1;
-        }
+        if (a.done !== b.done) return a.done ? 1 : -1;
         return b.createdAt - a.createdAt;
       });
 
@@ -896,9 +1081,7 @@
 
         const content = document.createElement("div");
         content.className = "note-content";
-        if (note.done) {
-          content.classList.add("done");
-        }
+        if (note.done) content.classList.add("done");
         content.textContent = note.text;
 
         const meta = document.createElement("div");
@@ -949,8 +1132,177 @@
       renderNotes();
     }
 
-    // --- Handlers de UI ---
+    // === FINANZAS: RENDER ===
+    function renderFinanzas() {
+      const container = document.getElementById("finanzasContainer");
+      const empty = document.getElementById("finanzasEmpty");
+      const totales = document.getElementById("finanzasTotales");
 
+      if (!movimientos.length) {
+        container.innerHTML = "";
+        empty.style.display = "block";
+        totales.style.display = "none";
+        return;
+      }
+
+      empty.style.display = "none";
+      container.innerHTML = "";
+
+      const sorted = [...movimientos].sort((a, b) => b.fecha.localeCompare(a.fecha));
+
+      sorted.forEach(mov => {
+        const row = document.createElement("div");
+        row.className = "fin-row";
+
+        const fecha = document.createElement("div");
+        fecha.textContent = mov.fecha;
+
+        const tipo = document.createElement("div");
+        const badge = document.createElement("span");
+        badge.className = "fin-badge " + mov.tipo;
+        badge.textContent = mov.tipo === "ingreso" ? "Ingreso" : "Gasto";
+        tipo.appendChild(badge);
+
+        const monto = document.createElement("div");
+        monto.className = "fin-monto " + mov.tipo;
+        const signo = mov.tipo === "ingreso" ? "+" : "-";
+        monto.textContent = `${signo} $ ${mov.monto.toFixed(2)}`;
+
+        const categoria = document.createElement("div");
+        categoria.textContent = mov.categoria || "-";
+
+        const desc = document.createElement("div");
+        desc.textContent = mov.descripcion || "";
+
+        const acciones = document.createElement("div");
+        const delBtn = document.createElement("button");
+        delBtn.className = "btn-icon btn-sm btn-danger";
+        delBtn.innerHTML = "<span>🗑</span>";
+        delBtn.title = "Eliminar movimiento";
+        delBtn.addEventListener("click", () => {
+          movimientos = movimientos.filter(m => m.id !== mov.id);
+          saveFinanzas();
+          renderFinanzas();
+        });
+        acciones.appendChild(delBtn);
+
+        row.appendChild(fecha);
+        row.appendChild(tipo);
+        row.appendChild(monto);
+        row.appendChild(categoria);
+        row.appendChild(desc);
+        row.appendChild(acciones);
+
+        container.appendChild(row);
+      });
+
+      // Totales
+      const ingreso = movimientos
+        .filter(m => m.tipo === "ingreso")
+        .reduce((acc, m) => acc + m.monto, 0);
+      const gasto = movimientos
+        .filter(m => m.tipo === "gasto")
+        .reduce((acc, m) => acc + m.monto, 0);
+      const saldo = ingreso - gasto;
+
+      totales.style.display = "flex";
+      totales.innerHTML = "";
+      const spanIngreso = document.createElement("span");
+      spanIngreso.textContent = `Ingresos: $ ${ingreso.toFixed(2)}`;
+      const spanGasto = document.createElement("span");
+      spanGasto.textContent = `Gastos: $ ${gasto.toFixed(2)}`;
+      const spanSaldo = document.createElement("span");
+      spanSaldo.textContent = `Saldo: $ ${saldo.toFixed(2)}`;
+
+      totales.appendChild(spanIngreso);
+      totales.appendChild(spanGasto);
+      totales.appendChild(spanSaldo);
+    }
+
+    function addMovimiento() {
+      const fechaInput = document.getElementById("finFecha");
+      const tipoInput = document.getElementById("finTipo");
+      const montoInput = document.getElementById("finMonto");
+      const catInput = document.getElementById("finCategoria");
+      const descInput = document.getElementById("finDescripcion");
+
+      let fecha = fechaInput.value;
+      if (!fecha) {
+        const hoy = new Date();
+        const yyyy = hoy.getFullYear();
+        const mm = String(hoy.getMonth() + 1).padStart(2, "0");
+        const dd = String(hoy.getDate()).padStart(2, "0");
+        fecha = `${yyyy}-${mm}-${dd}`;
+      }
+
+      const tipo = tipoInput.value;
+      const monto = parseFloat(montoInput.value.replace(",", "."));
+      if (isNaN(monto) || monto <= 0) {
+        alert("Ingresá un monto válido mayor a 0.");
+        return;
+      }
+
+      const categoria = catInput.value.trim();
+      const descripcion = descInput.value.trim();
+
+      movimientos.push({
+        id: Date.now() + Math.random(),
+        fecha,
+        tipo,
+        monto,
+        categoria,
+        descripcion,
+      });
+
+      saveFinanzas();
+      renderFinanzas();
+
+      montoInput.value = "";
+      descInput.value = "";
+      catInput.value = "";
+    }
+
+    function exportFinanzasCSV() {
+      if (!movimientos.length) {
+        alert("No hay movimientos para exportar.");
+        return;
+      }
+
+      const header = ["fecha", "tipo", "monto", "categoria", "descripcion"];
+      const rows = movimientos.map(m => [
+        m.fecha,
+        m.tipo,
+        m.monto.toFixed(2),
+        (m.categoria || "").replace(/"/g, '""'),
+        (m.descripcion || "").replace(/"/g, '""'),
+      ]);
+
+      const csvLines = [];
+      csvLines.push(header.join(","));
+      rows.forEach(r => {
+        const line = r.map(val => {
+          if (val.includes(",") || val.includes('"')) {
+            return `"${val}"`;
+          }
+          return val;
+        }).join(",");
+        csvLines.push(line);
+      });
+
+      const csvContent = csvLines.join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "finanzas_panel_personal.csv";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // === NAVIGATION ===
     function setupNavigation() {
       const buttons = document.querySelectorAll(".nav-btn");
       buttons.forEach(btn => {
@@ -971,6 +1323,7 @@
       });
     }
 
+    // === CONTROLES COTIZACIONES ===
     function setupFavoritesControls() {
       const input = document.getElementById("tickerInput");
       const addBtn = document.getElementById("addTickerBtn");
@@ -1003,11 +1356,15 @@
         if (e.key === "Enter") addTicker();
       });
 
-      refreshAllBtn.addEventListener("click", () => {
-        favorites.forEach((_, index) => simulateQuoteUpdate(index));
+      refreshAllBtn.addEventListener("click", async () => {
+        // cuidado con el límite de Alpha Vantage: no spamear
+        for (let i = 0; i < favorites.length; i++) {
+          await updateQuoteFromApi(i);
+        }
       });
     }
 
+    // === CONTROLES NOTAS ===
     function setupNotesControls() {
       const input = document.getElementById("noteInput");
       const addBtn = document.getElementById("addNoteBtn");
@@ -1035,14 +1392,31 @@
       });
     }
 
-    // --- Inicialización ---
+    // === CONTROLES FINANZAS ===
+    function setupFinanzasControls() {
+      const addBtn = document.getElementById("finAddBtn");
+      const exportBtn = document.getElementById("exportCsvBtn");
+
+      addBtn.addEventListener("click", addMovimiento);
+
+      const montoInput = document.getElementById("finMonto");
+      montoInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") addMovimiento();
+      });
+
+      exportBtn.addEventListener("click", exportFinanzasCSV);
+    }
+
+    // === INIT ===
     function init() {
       loadState();
       setupNavigation();
       setupFavoritesControls();
       setupNotesControls();
+      setupFinanzasControls();
       renderFavorites();
       renderNotes();
+      renderFinanzas();
       updateSummary();
     }
 
